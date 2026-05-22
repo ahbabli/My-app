@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@600&family=Ubuntu:wght@400;700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Ubuntu', ui-sans-serif, system-ui, sans-serif;
+  --font-filter: 'AR One Sans', 'Ubuntu', ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #05060d;
+  --color-mist: #abced6;
+  --color-cyan-brand: #45b2ca;
+  --color-ice: #f3fdff;
+}
+
+html {
+  background: #05060d;
+  scrollbar-width: none;
+}
+
+body {
+  margin: 0;
+  background: #05060d;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
