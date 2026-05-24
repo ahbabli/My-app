@@ -413,7 +413,7 @@ function LoginPanel({ password, setPassword, onLogin }) {
           type="password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          placeholder="Default: admin123"
+          placeholder="enter password"
         />
       </div>
       <button className="min-h-11 self-end rounded-[8px] bg-cyan-brand px-5 text-sm font-bold text-white transition hover:bg-mist hover:text-ink" type="submit">
