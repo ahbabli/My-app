@@ -37,6 +37,53 @@ ADMIN_PASSWORD=your-password
 ADMIN_TOKEN=your-long-random-token
 ```
 
+## Supabase Postgres
+
+This app should use Supabase as the Laravel database, not directly from React.
+Keep the database password private and never commit it.
+
+Your Supabase project:
+
+```text
+Project URL: https://yzuwayekcsszgztymrew.supabase.co
+Project ref: yzuwayekcsszgztymrew
+Database host: db.yzuwayekcsszgztymrew.supabase.co
+Database name: postgres
+Database user: postgres
+```
+
+For local Laravel, put this in `app-backend/.env`:
+
+```text
+DB_CONNECTION=pgsql
+DB_URL=postgresql://postgres.yzuwayekcsszgztymrew:YOUR-PASSWORD@aws-0-eu-west-1.pooler.supabase.com:5432/postgres
+DB_SSLMODE=require
+```
+
+Then run:
+
+```bash
+cd app-backend
+php artisan config:clear
+php artisan migrate --seed
+```
+
+For production, set the same `DB_CONNECTION`, `DB_URL`, and `DB_SSLMODE`
+variables on the backend host. The frontend only needs:
+
+```text
+VITE_API_URL=https://your-backend-url
+```
+
+Supabase CLI is optional for this Laravel app. If you want to link the repo to
+the Supabase project for CLI workflows:
+
+```bash
+supabase login
+supabase init
+supabase link --project-ref yzuwayekcsszgztymrew
+```
+
 Project API endpoints:
 
 ```text
