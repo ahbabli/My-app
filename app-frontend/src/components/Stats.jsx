@@ -9,7 +9,6 @@ export default function Stats({ stats }) {
       {stats.map((stat) => (
         <a
           className="flex min-h-12 flex-col justify-center gap-[5px] px-[3px] transition hover:translate-y-[-2px] hover:text-cyan-brand"
-          href={links[stat.label] ?? '#projects'}
           key={stat.label}
         >
           <strong className="text-[22px] font-bold leading-none text-white lg:text-[34px]">{stat.value}</strong>

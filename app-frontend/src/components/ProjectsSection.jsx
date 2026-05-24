@@ -2,22 +2,20 @@ import { useMemo, useState } from 'react';
 import ProjectCard from './ProjectCard.jsx';
 
 const tabs = [
-  { id: 'posts', label: 'Posts' },
-  { id: 'favorite', label: 'Favourite' },
-  { id: 'tagged', label: 'Tagged' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'favorite', label: 'Favorite' },
+
 ];
 
 export default function ProjectsSection({ projects }) {
-  const [activeTab, setActiveTab] = useState('posts');
+  const [activeTab, setActiveTab] = useState('projects');
 
   const visibleProjects = useMemo(() => {
     if (activeTab === 'favorite') {
       return projects.filter((project) => project.is_favorite);
     }
 
-    if (activeTab === 'tagged') {
-      return projects.filter((project) => (project.tags ?? []).length > 0);
-    }
+  
 
     return projects;
   }, [activeTab, projects]);

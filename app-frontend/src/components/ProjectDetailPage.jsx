@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://127.0.0.1:8000';
+import { TbArrowLeft } from 'react-icons/tb';
+import { apiUrl } from '../utils/api.js';
 
 export default function ProjectDetailPage({ slug, fallbackProjects }) {
   const fallbackProject = fallbackProjects.find((project) => project.slug === slug);
@@ -11,7 +11,7 @@ export default function ProjectDetailPage({ slug, fallbackProjects }) {
     let isMounted = true;
 
     setIsLoading(true);
-    fetch(`${API_URL}/api/projects/${slug}`)
+    fetch(apiUrl(`/api/projects/${slug}`))
       .then((response) => (response.ok ? response.json() : fallbackProject))
       .then((data) => {
         if (isMounted) {
@@ -48,8 +48,12 @@ export default function ProjectDetailPage({ slug, fallbackProjects }) {
         <section className="w-full max-w-[420px] rounded-[8px] border border-white/10 bg-[#080a12] p-6 text-center shadow-2xl shadow-black/30">
           <p className="font-filter text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-brand">Project not found</p>
           <h1 className="mt-3 text-3xl font-bold text-white">This project is not available.</h1>
-          <a className="mt-6 inline-flex min-h-11 items-center justify-center rounded-[9px] bg-cyan-brand px-5 text-sm font-bold text-white transition hover:bg-mist hover:text-ink" href="/#projects">
-            Back to projects
+          <a
+            className="mx-auto mt-6 grid h-11 w-11 place-items-center rounded-full bg-cyan-brand text-white transition hover:bg-mist hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-brand"
+            href="/#projects"
+            aria-label="Back to projects"
+          >
+            <TbArrowLeft className="h-5 w-5" aria-hidden="true" />
           </a>
         </section>
       </main>
@@ -63,8 +67,12 @@ export default function ProjectDetailPage({ slug, fallbackProjects }) {
     <main className="min-h-screen bg-ink px-0 py-0 text-white antialiased sm:px-6 sm:py-8 lg:px-10">
       <article className="mx-auto w-full max-w-[402px] bg-ink px-5 pb-8 pt-6 shadow-2xl shadow-black/30 sm:rounded-[28px] sm:px-[35px] sm:pb-[48px] sm:pt-[48px] lg:grid lg:min-h-[680px] lg:max-w-[1120px] lg:grid-cols-[420px_1fr] lg:gap-12 lg:rounded-[36px] lg:px-12 lg:py-12">
         <div>
-          <a className="text-sm font-bold text-mist transition hover:text-white" href="/#projects">
-            Back to projects
+          <a
+            className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-mist transition hover:border-cyan-brand hover:bg-cyan-brand hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-brand"
+            href="/#projects"
+            aria-label="Back to projects"
+          >
+            <TbArrowLeft className="h-5 w-5" aria-hidden="true" />
           </a>
 
           <div className="mt-8 aspect-square overflow-hidden rounded-[8px] bg-cyan-brand sm:rounded-[14px]">

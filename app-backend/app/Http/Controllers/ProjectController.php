@@ -86,7 +86,7 @@ class ProjectController extends Controller
             'tags.*' => ['string', 'max:255'],
             'links' => ['nullable', 'array'],
             'links.*.label' => ['required_with:links', 'string', 'max:255'],
-            'links.*.url' => ['required_with:links', 'string', 'max:255'],
+            'links.*.url' => ['required_with:links', 'string', 'max:1000'],
             'sort_order' => ['sometimes', 'integer', 'min:0'],
             'is_featured' => ['sometimes', 'boolean'],
             'is_hidden' => ['sometimes', 'boolean'],

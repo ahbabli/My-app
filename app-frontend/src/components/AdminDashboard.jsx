@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
+import { TbArrowLeft } from 'react-icons/tb';
+import { apiUrl } from '../utils/api.js';
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://127.0.0.1:8000';
 const TOKEN_KEY = 'portfolio_admin_token';
 
 const emptyProject = {
@@ -244,6 +245,8 @@ export default function AdminDashboard() {
           contactHref: profileForm.contactHref,
           cvHref: profileForm.cvHref,
           socialHref: profileForm.socialHref,
+          photoUrl: profileForm.photoUrl || null,
+          storyPhotoUrl: profileForm.storyPhotoUrl || null,
           skills: normalizeSkills(profileForm.skillsText, profile?.skills ?? []),
         },
       });
@@ -273,8 +276,12 @@ export default function AdminDashboard() {
           <p className="mt-3 text-sm leading-relaxed text-mist">Only admins can access the dashboard, project editor, and profile editor.</p>
           <LoginPanel password={password} setPassword={setPassword} onLogin={handleLogin} />
           <StatusMessages error={error} status={status} />
-          <a className="mt-4 inline-flex text-sm font-bold text-mist transition hover:text-white" href="/">
-            Back to public portfolio
+          <a
+            className="mt-4 grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-mist transition hover:border-cyan-brand hover:bg-cyan-brand hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-brand"
+            href="/"
+            aria-label="Back to public portfolio"
+          >
+            <TbArrowLeft className="h-5 w-5" aria-hidden="true" />
           </a>
         </section>
       </main>
@@ -496,6 +503,17 @@ function ProjectsAdmin({ isAdmin, projects, form, setForm, editingSlug, onSave, 
                   <p className="mt-3 text-xs font-bold uppercase tracking-[0.08em] text-white/38">
                     {project.category} · {project.year} · order {project.sort_order ?? 0}
                   </p>
+                  {project.links?.length ? (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {project.links.map((link) => (
+                        <a className="rounded-full border border-cyan-brand/25 bg-cyan-brand/10 px-2.5 py-1 text-xs font-bold text-mist transition hover:border-cyan-brand hover:text-white" href={link.url} target="_blank" rel="noreferrer" key={`${link.label}-${link.url}`}>
+                          {link.label}
+                        </a>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-3 text-xs font-bold text-white/32">No project links added.</p>
+                  )}
                 </div>
 
                 <div className="mt-auto grid gap-2 sm:grid-cols-2">
@@ -548,9 +566,23 @@ function ProfileAdmin({ isAdmin, form, setForm, onSave, isSaving }) {
         <TextField label="Contact link" value={form.contactHref} onChange={(value) => setForm({ ...form, contactHref: value })} required />
         <TextField label="CV link" value={form.cvHref} onChange={(value) => setForm({ ...form, cvHref: value })} required />
         <TextField label="Social/projects link" value={form.socialHref} onChange={(value) => setForm({ ...form, socialHref: value })} required />
+        <TextField label="Profile photo URL" value={form.photoUrl} onChange={(value) => setForm({ ...form, photoUrl: value })} />
+        <TextField label="Daily story photo URL" value={form.storyPhotoUrl} onChange={(value) => setForm({ ...form, storyPhotoUrl: value })} />
       </div>
 
       <div className="mt-4 grid gap-4">
+        {form.photoUrl ? (
+          <div className="flex items-center gap-3 rounded-[8px] border border-white/10 bg-ink p-3">
+            <img className="h-14 w-14 rounded-full object-cover" src={form.photoUrl} alt="" />
+            <p className="text-xs leading-relaxed text-mist">This image appears in the public profile circle.</p>
+          </div>
+        ) : null}
+        {form.storyPhotoUrl ? (
+          <div className="flex items-center gap-3 rounded-[8px] border border-white/10 bg-ink p-3">
+            <img className="h-20 w-14 rounded-[8px] object-cover" src={form.storyPhotoUrl} alt="" />
+            <p className="text-xs leading-relaxed text-mist">This image appears only inside the profile story. Change it whenever you want a new daily story.</p>
+          </div>
+        ) : null}
         <TextArea label="Bio" value={form.bio} onChange={(value) => setForm({ ...form, bio: value })} required rows={4} />
         <TextField label="Skills, comma separated" value={form.skillsText} onChange={(value) => setForm({ ...form, skillsText: value })} required />
       </div>
@@ -635,6 +667,8 @@ function toProfileForm(profile) {
     contactHref: profile.contactHref ?? '',
     cvHref: profile.cvHref ?? '',
     socialHref: profile.socialHref ?? '',
+    photoUrl: profile.photoUrl ?? '',
+    storyPhotoUrl: profile.storyPhotoUrl ?? '',
     skillsText: (profile.skills ?? []).map((skill) => skill.label).join(', '),
   };
 }
@@ -652,10 +686,31 @@ function parseLinks(value) {
     .map((line) => line.trim())
     .filter(Boolean)
     .map((line) => {
-      const [label, url] = line.split('|').map((part) => part?.trim());
+      const separatorIndex = line.indexOf('|');
+
+      if (separatorIndex === -1) {
+        const url = normalizeUrl(line);
+        return { label: 'Open link', url };
+      }
+
+      const label = line.slice(0, separatorIndex).trim();
+      const url = normalizeUrl(line.slice(separatorIndex + 1).trim());
+
       return { label, url };
     })
     .filter((link) => link.label && link.url);
+}
+
+function normalizeUrl(value) {
+  if (!value) {
+    return '';
+  }
+
+  if (/^(https?:|mailto:|tel:|#|\/)/i.test(value)) {
+    return value;
+  }
+
+  return `https://${value}`;
 }
 
 function normalizeSkills(value, existingSkills) {
@@ -673,7 +728,7 @@ function normalizeSkills(value, existingSkills) {
 }
 
 async function api(path, { method = 'GET', token, body } = {}) {
-  const response = await fetch(`${API_URL}${path}`, {
+  const response = await fetch(apiUrl(path), {
     method,
     headers: {
       Accept: 'application/json',

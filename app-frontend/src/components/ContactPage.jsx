@@ -1,4 +1,7 @@
 import { useMemo, useState } from 'react';
+import { FaInstagram, FaWhatsapp } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
+import { TbArrowLeft } from 'react-icons/tb';
 
 const iconClass = 'h-6 w-6';
 const CONTACT_EMAIL = 'ahbabli77@gmail.com';
@@ -23,8 +26,12 @@ export default function ContactPage({ profile }) {
   return (
     <main className="min-h-screen bg-ink px-0 py-0 text-white antialiased sm:px-6 sm:py-8 lg:grid lg:place-items-center lg:px-10">
       <section className="mx-auto w-full max-w-[402px] bg-ink px-5 pb-8 pt-6 shadow-2xl shadow-black/30 sm:rounded-[28px] sm:px-[35px] sm:pb-[42px] sm:pt-[48px] lg:max-w-[780px] lg:rounded-[36px] lg:px-12 lg:py-12">
-        <a className="text-sm font-bold text-mist transition hover:text-white" href="/">
-          Back to portfolio
+        <a
+          className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-mist transition hover:border-cyan-brand hover:bg-cyan-brand hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-brand"
+          href="/"
+          aria-label="Back to portfolio"
+        >
+          <TbArrowLeft className="h-5 w-5" aria-hidden="true" />
         </a>
 
         <div className="mt-8 lg:grid lg:grid-cols-[0.8fr_1.2fr] lg:gap-10">
@@ -126,8 +133,8 @@ function useSocialLinks(profile) {
         href: `https://www.instagram.com/${username}`,
         heading: 'Instagram portfolio updates',
         description: 'See design shots, process posts, and visual experiments.',
-        icon: <InstagramIcon />,
-        iconLarge: <InstagramIcon className="h-9 w-9" />,
+        icon: <FaInstagram className={iconClass} aria-hidden="true" />,
+        iconLarge: <FaInstagram className="h-9 w-9" aria-hidden="true" />,
       },
       {
         id: 'whatsapp',
@@ -136,8 +143,8 @@ function useSocialLinks(profile) {
         href: `https://wa.me/?text=${whatsappText}`,
         heading: 'Start a WhatsApp message',
         description: 'Use WhatsApp for fast project questions and short briefs.',
-        icon: <WhatsAppIcon />,
-        iconLarge: <WhatsAppIcon className="h-9 w-9" />,
+        icon: <FaWhatsapp className={iconClass} aria-hidden="true" />,
+        iconLarge: <FaWhatsapp className="h-9 w-9" aria-hidden="true" />,
       },
       {
         id: 'x',
@@ -146,36 +153,9 @@ function useSocialLinks(profile) {
         href: `https://x.com/${username}`,
         heading: 'Follow on X',
         description: 'Find quick notes, launches, and product design thoughts.',
-        icon: <XIcon />,
-        iconLarge: <XIcon className="h-9 w-9" />,
+        icon: <FaXTwitter className={iconClass} aria-hidden="true" />,
+        iconLarge: <FaXTwitter className="h-9 w-9" aria-hidden="true" />,
       },
     ];
   }, [profile.handle, profile.name]);
-}
-
-function InstagramIcon({ className = iconClass }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" fill="none">
-      <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="2" />
-      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2" />
-      <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" />
-    </svg>
-  );
-}
-
-function WhatsAppIcon({ className = iconClass }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" fill="none">
-      <path d="M5.2 19.1 6.1 16A8 8 0 1 1 9 18.3l-3.8.8Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-      <path d="M9.2 8.6c.2-.5.4-.5.7-.5h.5c.2 0 .4.1.5.4l.7 1.6c.1.3 0 .5-.1.7l-.4.5c.7 1.2 1.6 2.1 2.8 2.7l.5-.6c.2-.2.4-.3.7-.2l1.5.7c.3.2.4.3.4.6v.5c0 .4-.2.7-.6.9-.5.3-1.4.5-2.7.1-2.8-.8-5.2-3.2-6-6-.3-1.1 0-1.9.3-2.4Z" fill="currentColor" />
-    </svg>
-  );
-}
-
-function XIcon({ className = iconClass }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" fill="none">
-      <path d="m4 4 16 16M20 4 4 20" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-    </svg>
-  );
 }

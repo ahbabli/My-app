@@ -70,11 +70,39 @@ class ProjectApiTest extends TestCase
 
         $response
             ->assertCreated()
-            ->assertJsonPath('slug', 'portfolio-case-study');
+            ->assertJsonPath('slug', 'portfolio-case-study')
+            ->assertJsonPath('links.0.label', 'Preview')
+            ->assertJsonPath('links.0.url', '#');
 
         $this->assertDatabaseHas('projects', [
             'slug' => 'portfolio-case-study',
         ]);
+    }
+
+    public function test_project_links_are_saved_and_returned(): void
+    {
+        $this
+            ->withHeader('Authorization', 'Bearer admin-local-token')
+            ->postJson('/api/projects', [
+                'title' => 'Linked Portfolio Project',
+                'category' => 'Development',
+                'excerpt' => 'A project with multiple external links.',
+                'year' => 2026,
+                'tags' => ['React'],
+                'links' => [
+                    ['label' => 'Live Demo', 'url' => 'https://example.com/demo'],
+                    ['label' => 'Source Code', 'url' => 'https://github.com/example/project'],
+                ],
+            ])
+            ->assertCreated();
+
+        $this
+            ->getJson('/api/projects/linked-portfolio-project')
+            ->assertOk()
+            ->assertJsonPath('links.0.label', 'Live Demo')
+            ->assertJsonPath('links.0.url', 'https://example.com/demo')
+            ->assertJsonPath('links.1.label', 'Source Code')
+            ->assertJsonPath('links.1.url', 'https://github.com/example/project');
     }
 
     public function test_visitors_cannot_create_projects(): void

@@ -6,9 +6,11 @@ export const fallbackProfile = {
   contactHref: 'mailto:ahbabli77@gmail.com',
   cvHref: '/ahmed-albabli-cv.txt',
   socialHref: '#projects',
+  photoUrl: '/assets/avatar.png',
+  storyPhotoUrl: '/assets/avatar.png',
   stats: [
     { value: '24', label: 'Projects' },
-    { value: '19', label: 'Skills' },
+    { value: '24', label: 'Skills' },
     { value: '4', label: 'Years exp' },
   ],
   skills: [

@@ -25,6 +25,8 @@ class ProfileController extends Controller
             'contactHref' => ['required', 'string', 'max:255'],
             'cvHref' => ['required', 'string', 'max:255'],
             'socialHref' => ['required', 'string', 'max:255'],
+            'photoUrl' => ['nullable', 'string', 'max:1000'],
+            'storyPhotoUrl' => ['nullable', 'string', 'max:1000'],
             'skills' => ['required', 'array'],
             'skills.*.label' => ['required', 'string', 'max:255'],
             'skills.*.icon' => ['required', 'string', 'max:255'],
@@ -41,6 +43,8 @@ class ProfileController extends Controller
                 'contact_href' => $data['contactHref'],
                 'cv_href' => $data['cvHref'],
                 'social_href' => $data['socialHref'],
+                'photo_url' => $data['photoUrl'] ?? null,
+                'story_photo_url' => $data['storyPhotoUrl'] ?? null,
                 'skills' => $data['skills'],
             ],
         );
@@ -60,13 +64,30 @@ class ProfileController extends Controller
             'contactHref' => $profile->contact_href,
             'cvHref' => $profile->cv_href,
             'socialHref' => $profile->social_href,
+            'photoUrl' => $profile->photo_url,
+            'storyPhotoUrl' => $profile->story_photo_url,
             'stats' => [
                 ['value' => (string) (Schema::hasTable('projects') ? Project::query()->count() : 0), 'label' => 'Projects'],
-                ['value' => (string) count($profile->skills ?? []), 'label' => 'Skills'],
+                ['value' => (string) $this->skillItemCount($profile->skills ?? []), 'label' => 'Skills'],
                 ['value' => '4', 'label' => 'Years exp'],
             ],
             'skills' => $profile->skills ?? [],
         ];
+    }
+
+    private function skillItemCount(array $skills): int
+    {
+        $knownSkillCounts = [
+            'ui ux' => 8,
+            'development' => 8,
+            'graphic design' => 8,
+        ];
+
+        return array_reduce($skills, function (int $total, array $skill) use ($knownSkillCounts): int {
+            $label = strtolower((string) ($skill['label'] ?? ''));
+
+            return $total + ($knownSkillCounts[$label] ?? 1);
+        }, 0);
     }
 
     private function corsResponse(mixed $data): JsonResponse

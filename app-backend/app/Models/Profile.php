@@ -14,6 +14,8 @@ class Profile extends Model
         'contact_href',
         'cv_href',
         'social_href',
+        'photo_url',
+        'story_photo_url',
         'skills',
     ];
 
@@ -34,6 +36,8 @@ class Profile extends Model
             'contact_href' => 'mailto:ahbabli77@gmail.com',
             'cv_href' => '/ahmed-albabli-cv.txt',
             'social_href' => '#projects',
+            'photo_url' => '/assets/avatar.png',
+            'story_photo_url' => '/assets/avatar.png',
             'skills' => [
                 ['label' => 'UI UX', 'icon' => 'uiux-icon.svg', 'iconClass' => 'h-[45px] w-8'],
                 ['label' => 'Development', 'icon' => 'dev-icon.svg', 'iconClass' => 'h-[43px] w-12'],

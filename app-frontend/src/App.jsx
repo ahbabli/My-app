@@ -5,8 +5,7 @@ import ProfileSurface from './components/ProfileSurface.jsx';
 import ProjectDetailPage from './components/ProjectDetailPage.jsx';
 import ProjectsSection from './components/ProjectsSection.jsx';
 import { fallbackProfile, fallbackProjects } from './data/profile.js';
-
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://127.0.0.1:8000';
+import { apiUrl } from './utils/api.js';
 
 export default function App() {
   const [profile, setProfile] = useState(fallbackProfile);
@@ -19,12 +18,12 @@ export default function App() {
       return;
     }
 
-    fetch(`${API_URL}/api/profile`)
+    fetch(apiUrl('/api/profile'))
       .then((response) => (response.ok ? response.json() : fallbackProfile))
       .then(setProfile)
       .catch(() => setProfile(fallbackProfile));
 
-    fetch(`${API_URL}/api/projects`)
+    fetch(apiUrl('/api/projects'))
       .then((response) => (response.ok ? response.json() : fallbackProjects))
       .then(setProjects)
       .catch(() => setProjects(fallbackProjects));
