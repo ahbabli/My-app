@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { TbArrowLeft } from 'react-icons/tb';
-import { apiUrl } from '../utils/api.js';
+import { deleteProject as deleteStoredProject, getAllProjects, getProfile, isAdminPassword, saveProfile as saveStoredProfile, saveProject as saveStoredProject, updateProject } from '../utils/portfolioStore.js';
 
 const TOKEN_KEY = 'portfolio_admin_token';
 
@@ -46,13 +46,7 @@ export default function AdminDashboard() {
       return;
     }
 
-    api('/api/admin/me', { token })
-      .then(() => setRole('admin'))
-      .catch(() => {
-        localStorage.removeItem(TOKEN_KEY);
-        setToken('');
-        setRole('visitor');
-      });
+    setRole('admin');
   }, [token]);
 
   const metrics = useMemo(() => {
@@ -62,46 +56,38 @@ export default function AdminDashboard() {
     const published = projects.filter((project) => project.status === 'Published' || project.status === 'Featured').length;
 
     return [
-      { label: 'Projects', value: projects.length, change: 'Total in database' },
+      { label: 'Projects', value: projects.length, change: 'Saved in this browser' },
       { label: 'Published', value: published, change: 'Visible if not hidden' },
       { label: 'Favourite', value: favorite, change: 'Shown in Favourite tab' },
       { label: 'Hidden', value: hidden, change: 'Removed from public UI' },
     ];
   }, [isAdmin, projects]);
 
-  async function refreshData() {
+  function refreshData() {
     setError('');
-    try {
-      const projectPath = token ? '/api/admin/projects' : '/api/projects';
-      const [profileData, projectData] = await Promise.all([api('/api/profile'), api(projectPath, { token })]);
-      setProfile(profileData);
-      setProfileForm(toProfileForm(profileData));
-      setProjects(projectData);
-    } catch (requestError) {
-      setError(requestError.message);
-    }
+    const profileData = getProfile();
+    setProfile(profileData);
+    setProfileForm(toProfileForm(profileData));
+    setProjects(getAllProjects());
   }
 
-  async function handleLogin(event) {
+  function handleLogin(event) {
     event.preventDefault();
     setError('');
     setStatus('');
 
-    try {
-      const data = await api('/api/admin/login', {
-        method: 'POST',
-        body: { password },
-      });
-
-      localStorage.setItem(TOKEN_KEY, data.token);
-      setToken(data.token);
-      setRole(data.role);
-      setPassword('');
-      await refreshDataWithToken(data.token);
-      setStatus('Admin access enabled.');
-    } catch (requestError) {
-      setError(requestError.message);
+    if (!isAdminPassword(password)) {
+      setError('Invalid admin password.');
+      return;
     }
+
+    const localToken = 'local-static-admin';
+    localStorage.setItem(TOKEN_KEY, localToken);
+    setToken(localToken);
+    setRole('admin');
+    setPassword('');
+    refreshData();
+    setStatus('Admin access enabled. Changes are saved in this browser.');
   }
 
   function handleLogout() {
@@ -111,12 +97,12 @@ export default function AdminDashboard() {
     setStatus('Signed out. You are viewing as visitor.');
   }
 
-  async function refreshDataWithToken(authToken) {
+  function refreshDataWithToken() {
     setError('');
-    const [profileData, projectData] = await Promise.all([api('/api/profile'), api('/api/admin/projects', { token: authToken })]);
+    const profileData = getProfile();
     setProfile(profileData);
     setProfileForm(toProfileForm(profileData));
-    setProjects(projectData);
+    setProjects(getAllProjects());
   }
 
   function editProject(project) {
@@ -144,38 +130,35 @@ export default function AdminDashboard() {
     setProjectForm(emptyProject);
   }
 
-  async function saveProject(event) {
+  function saveProject(event) {
     event.preventDefault();
-    requireAdmin();
     setIsSaving(true);
     setError('');
     setStatus('');
 
-    const payload = {
-      title: projectForm.title,
-      category: projectForm.category,
-      excerpt: projectForm.excerpt,
-      description: projectForm.description || null,
-      image_url: projectForm.image_url || null,
-      year: Number(projectForm.year),
-      status: projectForm.status,
-      tags: splitCsv(projectForm.tagsText),
-      links: parseLinks(projectForm.linksText),
-      sort_order: Number(projectForm.sort_order) || 0,
-      is_featured: projectForm.is_featured,
-      is_hidden: projectForm.is_hidden,
-      is_favorite: projectForm.is_favorite,
-    };
-
     try {
-      await api(editingSlug ? `/api/projects/${editingSlug}` : '/api/projects', {
-        method: editingSlug ? 'PUT' : 'POST',
-        token,
-        body: payload,
-      });
+      requireAdmin();
+      saveStoredProject(
+        {
+          title: projectForm.title,
+          category: projectForm.category,
+          excerpt: projectForm.excerpt,
+          description: projectForm.description || '',
+          image_url: projectForm.image_url || '',
+          year: Number(projectForm.year),
+          status: projectForm.status,
+          tags: splitCsv(projectForm.tagsText),
+          links: parseLinks(projectForm.linksText),
+          sort_order: Number(projectForm.sort_order) || 0,
+          is_featured: projectForm.is_featured,
+          is_hidden: projectForm.is_hidden,
+          is_favorite: projectForm.is_favorite,
+        },
+        editingSlug,
+      );
       resetProjectForm();
-      await refreshData();
-      setStatus(editingSlug ? 'Project updated in the database.' : 'Project added to the database.');
+      refreshData();
+      setStatus(editingSlug ? 'Project updated locally.' : 'Project added locally.');
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -183,10 +166,10 @@ export default function AdminDashboard() {
     }
   }
 
-  async function deleteProject(project) {
+  function deleteProject(project) {
     requireAdmin();
 
-    if (!window.confirm(`Remove "${project.title}" from the database?`)) {
+    if (!window.confirm(`Remove "${project.title}" from this browser?`)) {
       return;
     }
 
@@ -194,66 +177,55 @@ export default function AdminDashboard() {
     setStatus('');
 
     try {
-      await api(`/api/projects/${project.slug}`, {
-        method: 'DELETE',
-        token,
-      });
-      await refreshData();
+      deleteStoredProject(project.slug);
+      refreshData();
       if (editingSlug === project.slug) {
         resetProjectForm();
       }
-      setStatus('Project removed from the database.');
+      setStatus('Project removed locally.');
     } catch (requestError) {
       setError(requestError.message);
     }
   }
 
-  async function updateProjectFlags(project, flags) {
+  function updateProjectFlags(project, flags) {
     requireAdmin();
     setError('');
     setStatus('');
 
     try {
-      await api(`/api/projects/${project.slug}`, {
-        method: 'PATCH',
-        token,
-        body: flags,
-      });
-      await refreshDataWithToken(token);
-      setStatus('Project visibility updated.');
+      updateProject(project.slug, flags);
+      refreshDataWithToken();
+      setStatus('Project visibility updated locally.');
     } catch (requestError) {
       setError(requestError.message);
     }
   }
 
-  async function saveProfile(event) {
+  function saveProfile(event) {
     event.preventDefault();
-    requireAdmin();
     setIsSaving(true);
     setError('');
     setStatus('');
 
     try {
-      const updatedProfile = await api('/api/profile', {
-        method: 'PUT',
-        token,
-        body: {
-          name: profileForm.name,
-          handle: profileForm.handle,
-          role: profileForm.role,
-          bio: profileForm.bio,
-          contactHref: profileForm.contactHref,
-          cvHref: profileForm.cvHref,
-          socialHref: profileForm.socialHref,
-          photoUrl: profileForm.photoUrl || null,
-          storyPhotoUrl: profileForm.storyPhotoUrl || null,
-          skills: normalizeSkills(profileForm.skillsText, profile?.skills ?? []),
-        },
+      requireAdmin();
+      const updatedProfile = saveStoredProfile({
+        name: profileForm.name,
+        handle: profileForm.handle,
+        role: profileForm.role,
+        bio: profileForm.bio,
+        contactHref: profileForm.contactHref,
+        cvHref: profileForm.cvHref,
+        socialHref: profileForm.socialHref,
+        photoUrl: profileForm.photoUrl || '',
+        storyPhotoUrl: profileForm.storyPhotoUrl || '',
+        skills: normalizeSkills(profileForm.skillsText, profile?.skills ?? []),
       });
 
       setProfile(updatedProfile);
       setProfileForm(toProfileForm(updatedProfile));
-      setStatus('Profile updated in the database.');
+      setStatus('Profile updated locally.');
     } catch (requestError) {
       setError(requestError.message);
     } finally {
@@ -273,7 +245,7 @@ export default function AdminDashboard() {
         <section className="w-full max-w-[460px] rounded-[8px] border border-white/10 bg-[#080a12] p-5 shadow-2xl shadow-black/30 sm:p-7">
           <p className="font-filter text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-brand">Protected admin area</p>
           <h1 className="mt-3 text-3xl font-bold leading-tight text-white">Sign in to manage content</h1>
-          <p className="mt-3 text-sm leading-relaxed text-mist">Only admins can access the dashboard, project editor, and profile editor.</p>
+          <p className="mt-3 text-sm leading-relaxed text-mist">Only admins can access the local dashboard, project editor, and profile editor.</p>
           <LoginPanel password={password} setPassword={setPassword} onLogin={handleLogin} />
           <StatusMessages error={error} status={status} />
           <a
@@ -317,7 +289,7 @@ export default function AdminDashboard() {
               <div className="mt-6 rounded-[8px] border border-white/10 bg-ink p-4">
                 <p className="font-filter text-[10px] font-semibold uppercase tracking-[0.14em] text-cyan-brand">Access</p>
                 <p className="mt-3 text-sm font-bold text-white">{isAdmin ? 'Admin' : 'Visitor'}</p>
-                <p className="mt-1 text-xs leading-snug text-mist">{isAdmin ? 'You can create, update, and remove content.' : 'Log in to unlock database writes.'}</p>
+                <p className="mt-1 text-xs leading-snug text-mist">{isAdmin ? 'You can create, update, and remove local content.' : 'Log in to unlock local edits.'}</p>
               </div>
             </aside>
 
@@ -326,7 +298,7 @@ export default function AdminDashboard() {
                 <div>
                   <p className="font-filter text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-brand">Admin dashboard</p>
                   <h1 className="mt-2 text-3xl font-bold leading-tight text-white sm:text-4xl">Manage live portfolio data</h1>
-                  <p className="mt-2 max-w-2xl text-sm leading-relaxed text-mist">A simple workspace for projects, visibility, favourites, and profile content.</p>
+                  <p className="mt-2 max-w-2xl text-sm leading-relaxed text-mist">A simple local workspace for projects, visibility, favourites, and profile content.</p>
                 </div>
 
                 <a className="inline-flex min-h-11 items-center justify-center rounded-[8px] bg-mist px-5 text-sm font-bold text-ink transition hover:bg-white" href="/">
@@ -557,7 +529,7 @@ function ProfileAdmin({ isAdmin, form, setForm, onSave, isSaving }) {
   return (
     <form className="mt-6 rounded-[8px] border border-white/10 bg-white/[0.035] p-5 sm:p-6" onSubmit={onSave}>
       <h2 className="text-xl font-bold text-white">Edit profile</h2>
-      <p className="mt-1 text-xs text-mist">This updates the public profile header, bio, links, stats, and skills.</p>
+      <p className="mt-1 text-xs text-mist">This updates the public profile header, bio, links, stats, and skills in this browser.</p>
 
       <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <TextField label="Name" value={form.name} onChange={(value) => setForm({ ...form, name: value })} required />
@@ -725,25 +697,4 @@ function normalizeSkills(value, existingSkills) {
       iconClass: existing?.iconClass ?? 'h-[45px] w-8',
     };
   });
-}
-
-async function api(path, { method = 'GET', token, body } = {}) {
-  const response = await fetch(apiUrl(path), {
-    method,
-    headers: {
-      Accept: 'application/json',
-      ...(body ? { 'Content-Type': 'application/json' } : {}),
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    ...(body ? { body: JSON.stringify(body) } : {}),
-  });
-
-  const data = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    const validationMessage = data.errors ? Object.values(data.errors).flat().join(' ') : '';
-    throw new Error(validationMessage || data.message || 'Request failed.');
-  }
-
-  return data;
 }

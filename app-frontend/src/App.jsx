@@ -1,33 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import AdminDashboard from './components/AdminDashboard.jsx';
 import ContactPage, { SocialPage } from './components/ContactPage.jsx';
 import ProfileSurface from './components/ProfileSurface.jsx';
 import ProjectDetailPage from './components/ProjectDetailPage.jsx';
 import ProjectsSection from './components/ProjectsSection.jsx';
-import { fallbackProfile, fallbackProjects } from './data/profile.js';
-import { apiUrl } from './utils/api.js';
+import { getProfile, getVisibleProjects } from './utils/portfolioStore.js';
 
 export default function App() {
-  const [profile, setProfile] = useState(fallbackProfile);
-  const [projects, setProjects] = useState(fallbackProjects);
+  const profile = useMemo(() => getProfile(), []);
+  const projects = useMemo(() => getVisibleProjects(), []);
   const path = window.location.pathname;
   const isAdminRoute = path === '/admin';
-
-  useEffect(() => {
-    if (isAdminRoute) {
-      return;
-    }
-
-    fetch(apiUrl('/api/profile'))
-      .then((response) => (response.ok ? response.json() : fallbackProfile))
-      .then(setProfile)
-      .catch(() => setProfile(fallbackProfile));
-
-    fetch(apiUrl('/api/projects'))
-      .then((response) => (response.ok ? response.json() : fallbackProjects))
-      .then(setProjects)
-      .catch(() => setProjects(fallbackProjects));
-  }, [isAdminRoute]);
 
   if (isAdminRoute) {
     return <AdminDashboard />;
@@ -42,7 +25,7 @@ export default function App() {
   }
 
   if (path.startsWith('/projects/')) {
-    return <ProjectDetailPage slug={decodeURIComponent(path.replace('/projects/', ''))} fallbackProjects={fallbackProjects} />;
+    return <ProjectDetailPage slug={decodeURIComponent(path.replace('/projects/', ''))} />;
   }
 
   return (

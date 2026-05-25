@@ -1,46 +1,8 @@
-import { useEffect, useState } from 'react';
 import { TbArrowLeft } from 'react-icons/tb';
-import { apiUrl } from '../utils/api.js';
+import { getProjectBySlug } from '../utils/portfolioStore.js';
 
-export default function ProjectDetailPage({ slug, fallbackProjects }) {
-  const fallbackProject = fallbackProjects.find((project) => project.slug === slug);
-  const [project, setProject] = useState(fallbackProject ?? null);
-  const [isLoading, setIsLoading] = useState(!fallbackProject);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    setIsLoading(true);
-    fetch(apiUrl(`/api/projects/${slug}`))
-      .then((response) => (response.ok ? response.json() : fallbackProject))
-      .then((data) => {
-        if (isMounted) {
-          setProject(data ?? null);
-        }
-      })
-      .catch(() => {
-        if (isMounted) {
-          setProject(fallbackProject ?? null);
-        }
-      })
-      .finally(() => {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [fallbackProject, slug]);
-
-  if (isLoading) {
-    return (
-      <main className="grid min-h-screen place-items-center bg-ink px-4 text-white antialiased">
-        <p className="text-sm font-bold text-mist">Loading project...</p>
-      </main>
-    );
-  }
+export default function ProjectDetailPage({ slug }) {
+  const project = getProjectBySlug(slug);
 
   if (!project) {
     return (
