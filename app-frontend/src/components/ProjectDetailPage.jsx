@@ -60,7 +60,7 @@ export default function ProjectDetailPage({ slug }) {
           <div className="mt-8 grid gap-3 sm:flex sm:flex-wrap">
             {links.length ? (
               links.map((link) => (
-                <a className="inline-flex min-h-11 items-center justify-center rounded-[9px] bg-cyan-brand px-5 text-sm font-bold text-white transition hover:bg-mist hover:text-ink" href={link.url} key={link.label}>
+                <a className="inline-flex min-h-11 items-center justify-center rounded-[9px] bg-cyan-brand px-5 text-sm font-bold text-white transition hover:bg-mist hover:text-ink" target='_blank' href={link.url} key={link.label}>
                   {link.label}
                 </a>
               ))

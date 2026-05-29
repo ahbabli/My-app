@@ -140,7 +140,7 @@ function useSocialLinks(profile) {
         id: 'whatsapp',
         label: 'WhatsApp',
         page: '/whatsapp',
-        href: `https://wa.me/?text=${whatsappText}`,
+        href: `https://wa.me/message/LCGGGKVER4UAK1`,
         heading: 'Start a WhatsApp message',
         description: 'Use WhatsApp for fast project questions and short briefs.',
         icon: <FaWhatsapp className={iconClass} aria-hidden="true" />,
