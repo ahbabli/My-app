@@ -10,7 +10,7 @@ export default function ProjectCard({ project, index }) {
       aria-label={`Open ${project.title}`}
     >
       {project.image_url ? (
-        <img className="h-full w-full object-cover transition duration-300 group-hover:scale-105" src={project.image_url} alt={project.title} />
+        <img className="h-full w-full object-cover transition duration-300 group-hover:scale-105" src={project.image_url} alt={project.title} loading="lazy" decoding="async" />
       ) : (
         <GeneratedProjectTile project={project} index={index} />
       )}

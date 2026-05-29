@@ -79,7 +79,7 @@ export default function ProjectDetailPage({ slug }) {
 
 function ProjectHero({ project }) {
   if (project.image_url) {
-    return <img className="h-full w-full object-cover" src={project.image_url} alt={project.title} />;
+    return <img className="h-full w-full object-cover" src={project.image_url} alt={project.title} decoding="async" />;
   }
 
   return (

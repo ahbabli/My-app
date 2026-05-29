@@ -8,7 +8,7 @@ export const fallbackProfile = {
   contactHref: 'mailto:ahbabli77@gmail.com',
   cvHref: '/Ahmed%20Albabli.pdf',
   socialHref: '#projects',
-  photoUrl: '/assets/avatar.png',
+  photoUrl: '/assets/avatar.webp',
   storyPhotoUrl: '/assets/story.jpeg',
   stats: [
     { value: '24', label: 'Projects' },
@@ -30,7 +30,7 @@ export const fallbackProjects = [
     excerpt: 'FitTrack is a fitness tracking mobile application designed to help users monitor workouts, daily activity, and personal fitness progress through a clean and motivating interface.',
     year: 2026,
     status: 'Published',
-    image_url: asset2('0.jpg'),
+    image_url: asset2('0.webp'),
     is_featured: true,
     is_hidden: false,
     is_favorite: true,
