@@ -4,7 +4,7 @@ import { asset } from '../utils/assets.js';
 export default function ProfileHeader({ profile }) {
   const [isStoryOpen, setIsStoryOpen] = useState(false);
   const photoSrc = profile.photoUrl || asset('avatar.png');
-  const storyPhotoSrc = profile.storyPhotoUrl || photoSrc;
+  const storyPhotoSrc = asset('story.jpeg');
 
   useEffect(() => {
     if (!isStoryOpen) {

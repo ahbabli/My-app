@@ -7,7 +7,7 @@ export const fallbackProfile = {
   cvHref: '/Ahmed%20Albabli.pdf',
   socialHref: '#projects',
   photoUrl: '/assets/avatar.png',
-  storyPhotoUrl: '/assets/avatar.png',
+  storyPhotoUrl: '/assets/story.jpeg',
   stats: [
     { value: '24', label: 'Projects' },
     { value: '24', label: 'Skills' },
