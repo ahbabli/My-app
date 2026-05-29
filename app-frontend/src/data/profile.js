@@ -4,7 +4,7 @@ export const fallbackProfile = {
   role: 'Product Designer',
   bio: 'I design and prototype digital products from initial brand identity to high-fidelity code-ready interfaces.',
   contactHref: 'mailto:ahbabli77@gmail.com',
-  cvHref: '/ahmed-albabli-cv.txt',
+  cvHref: '/Ahmed%20Albabli.pdf',
   socialHref: '#projects',
   photoUrl: '/assets/avatar.png',
   storyPhotoUrl: '/assets/avatar.png',

@@ -3,6 +3,7 @@ import { fallbackProfile, fallbackProjects } from '../data/profile.js';
 const PROFILE_KEY = 'portfolio_profile';
 const PROJECTS_KEY = 'portfolio_projects';
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD ?? 'admin123';
+const LEGACY_CV_HREF = '/ahmed-albabli-cv.txt';
 
 const knownSkillCounts = {
   'ui ux': 8,
@@ -18,7 +19,7 @@ export function getProfile() {
   const profile = readJson(PROFILE_KEY, fallbackProfile);
   const projects = getAllProjects();
 
-  return withStats(profile, projects);
+  return withStats(normalizeProfile(profile), projects);
 }
 
 export function saveProfile(profile) {
@@ -87,6 +88,13 @@ function withStats(profile, projects) {
       { value: String(skillItemCount(profile.skills ?? [])), label: 'Skills' },
       { value: '4', label: 'Years exp' },
     ],
+  };
+}
+
+function normalizeProfile(profile) {
+  return {
+    ...profile,
+    cvHref: profile.cvHref === LEGACY_CV_HREF ? fallbackProfile.cvHref : profile.cvHref,
   };
 }
 
