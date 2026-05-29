@@ -1,3 +1,5 @@
+import { asset2 } from '../utils/assets.js';
+
 export const fallbackProfile = {
   name: 'Ahmed Albabli',
   handle: '@ahbabli',
@@ -22,17 +24,18 @@ export const fallbackProfile = {
 
 export const fallbackProjects = [
   {
-    title: 'Mobile Banking Dashboard',
-    slug: 'mobile-banking-dashboard',
+    title: 'FitTrack App',
+    slug: 'mobile Fitness Tracking app',
     category: 'UI UX',
-    excerpt: 'A clean finance app concept with account insights, transfer flows, and card controls.',
+    excerpt: 'FitTrack is a fitness tracking mobile application designed to help users monitor workouts, daily activity, and personal fitness progress through a clean and motivating interface.',
     year: 2026,
     status: 'Published',
+    image_url: asset2('0.jpg'),
     is_featured: true,
     is_hidden: false,
     is_favorite: true,
     tags: ['Figma', 'Mobile App', 'Design System'],
-    links: [{ label: 'Case Study', url: '#' }],
+    links: [{ label: 'See Details', url: 'https://www.behance.net/gallery/243682853/FitTrack-app-Ui-Ux-design' }],
   },
   {
     title: 'SaaS Analytics Landing Page',
