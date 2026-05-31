@@ -20,6 +20,22 @@ body {
   background: #05060d;
 }
 
+.story-pulse {
+  isolation: isolate;
+  box-shadow: 0 0 0 1px rgba(243, 253, 255, 0.2), 0 0 18px rgba(69, 178, 202, 0.2);
+}
+
+.story-pulse::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  z-index: -1;
+  border-radius: 9999px;
+  border: 1px solid rgba(171, 206, 214, 0.42);
+  box-shadow: 0 0 14px rgba(69, 178, 202, 0.18);
+  pointer-events: none;
+}
+
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none;

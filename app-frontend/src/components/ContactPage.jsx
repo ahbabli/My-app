@@ -62,7 +62,7 @@ export default function ContactPage({ profile }) {
             <label className="grid gap-2 text-sm font-bold text-white">
               Message
               <textarea
-                className="min-h-[150px] resize-y rounded-[9px] border border-white/10 bg-[#080a12] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/30 focus:border-cyan-brand"
+                className="min-h-[150px] resize-y rounded-[9px] border border-white/10 bg-[#080a12] px-4 py-3 text-base text-white outline-none transition placeholder:text-white/30 focus:border-cyan-brand sm:text-sm"
                 value={form.message}
                 onChange={(event) => setForm({ ...form, message: event.target.value })}
                 placeholder="Tell me about your project..."
@@ -110,7 +110,7 @@ function ContactField({ label, value, onChange, type = 'text', required = false 
     <label className="grid gap-2 text-sm font-bold text-white">
       {label}
       <input
-        className="rounded-[9px] border border-white/10 bg-[#080a12] px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/30 focus:border-cyan-brand"
+        className="rounded-[9px] border border-white/10 bg-[#080a12] px-4 py-3 text-base text-white outline-none transition placeholder:text-white/30 focus:border-cyan-brand sm:text-sm"
         type={type}
         value={value}
         onChange={(event) => onChange(event.target.value)}

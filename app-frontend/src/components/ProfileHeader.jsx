@@ -29,7 +29,7 @@ export default function ProfileHeader({ profile }) {
   return (
     <header className="grid grid-cols-[108px_1fr] items-center gap-5 sm:block lg:flex lg:flex-col lg:justify-center">
       <button
-        className="relative h-[104px] w-[104px] rounded-full transition hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-brand focus-visible:ring-offset-4 focus-visible:ring-offset-ink sm:h-[166px] sm:w-[166px] lg:h-[220px] lg:w-[220px]"
+        className="story-pulse relative h-[104px] w-[104px] rounded-full transition hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-brand focus-visible:ring-offset-4 focus-visible:ring-offset-ink sm:h-[166px] sm:w-[166px] lg:h-[220px] lg:w-[220px]"
         type="button"
         aria-label={`Open ${profile.name} profile story`}
         onClick={() => setIsStoryOpen(true)}

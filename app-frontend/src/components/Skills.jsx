@@ -111,7 +111,7 @@ export default function Skills({ skills }) {
         {skills.map((skill) => (
           <article className="flex min-w-0 flex-1 flex-col items-center gap-2 lg:w-36 lg:flex-none lg:gap-5" key={skill.label}>
             <button
-              className="relative grid h-16 w-16 place-items-center rounded-full border border-ice/80 bg-cyan-brand text-white shadow-lg shadow-cyan-brand/20 transition hover:scale-105 hover:bg-[#62c9df] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-brand focus-visible:ring-offset-4 focus-visible:ring-offset-ink sm:h-[78px] sm:w-[78px] lg:h-24 lg:w-24"
+              className="story-pulse relative grid h-16 w-16 place-items-center rounded-full border border-ice/80 bg-cyan-brand text-white shadow-lg shadow-cyan-brand/20 transition hover:scale-105 hover:bg-[#62c9df] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-brand focus-visible:ring-offset-4 focus-visible:ring-offset-ink sm:h-[78px] sm:w-[78px] lg:h-24 lg:w-24"
               type="button"
               aria-label={`Open ${skill.label} skills`}
               onClick={() => setActiveSkill(skill)}
