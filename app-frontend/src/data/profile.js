@@ -38,6 +38,20 @@ export const fallbackProjects = [
     links: [{ label: 'See Details', url: 'https://www.behance.net/gallery/243682853/FitTrack-app-Ui-Ux-design' }],
   },
   {
+    title: 'Taleeb Platform',
+    slug: 'study',
+    category: 'Full-stack',
+    excerpt: 'TALEEB is a smart digital platform designed to simplify student services within a university. It allows students to access administrative services online, track their requests, view schedules, and interact with an AI assistant for guidance.A modern weather website that displays real-time weather based on your location or any city you search for, with a dynamic interface that adapts to current weather conditions.',
+    year: 2026,
+    status: 'Published',
+    image_url: asset2('7.webp'),
+    is_featured: false,
+    is_hidden: false,
+    is_favorite: true,
+    tags: ['React js', 'Laravel', 'Dev'],
+    links: [{ label: 'Soon', url: '' }],
+  },
+  {
     title: 'Honoviren Chocolate Landing Page',
     slug: 'landing-page',
     category: 'Development',
@@ -109,4 +123,5 @@ export const fallbackProjects = [
     tags: ['javaScript', 'website', 'Dev'],
     links: [{ label: 'live demo', url: 'https://ahbabli.github.io/abweather/' }],
   },
+  
 ];
