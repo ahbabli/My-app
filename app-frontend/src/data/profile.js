@@ -49,7 +49,7 @@ export const fallbackProjects = [
     is_hidden: false,
     is_favorite: true,
     tags: ['React js', 'Laravel', 'Dev'],
-    links: [{ label: 'Soon', url: '' }],
+   links: [{ label: 'See Details', url: 'https://www.behance.net/gallery/252710195/TALEEB-smart-student-platform' }],
   },
   {
     title: 'Honoviren Chocolate Landing Page',
