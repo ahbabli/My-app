@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { TbBrandFigma, TbCode, TbPalette, TbSparkles } from 'react-icons/tb';
+import { useDialogFocus } from '../utils/useDialogFocus.js';
 
 const skillStories = {
   'UI UX': {
@@ -82,25 +83,8 @@ function SkillIcon({ label, className = 'h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12
 export default function Skills({ skills }) {
   const [activeSkill, setActiveSkill] = useState(null);
 
-  useEffect(() => {
-    if (!activeSkill) {
-      return undefined;
-    }
-
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') {
-        setActiveSkill(null);
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
-    };
-  }, [activeSkill]);
+  const closeSkillStory = useCallback(() => setActiveSkill(null), []);
+  const skillDialogRef = useDialogFocus(Boolean(activeSkill), closeSkillStory);
 
   const activeStory = activeSkill ? skillStories[activeSkill.label] : null;
   const activeTheme = activeStory?.theme;
@@ -132,9 +116,11 @@ export default function Skills({ skills }) {
           role="dialog"
           aria-modal="true"
           aria-labelledby="skill-story-title"
-          onMouseDown={() => setActiveSkill(null)}
+          onMouseDown={closeSkillStory}
         >
           <div
+            ref={skillDialogRef}
+            tabIndex="-1"
             className={`relative flex h-[min(680px,calc(100dvh-24px))] w-full max-w-[390px] flex-col overflow-hidden rounded-[24px] border border-white/15 shadow-2xl shadow-black/60 sm:h-[min(720px,92vh)] sm:rounded-[28px] ${activeTheme.background}`}
             onMouseDown={(event) => event.stopPropagation()}
           >
@@ -163,7 +149,7 @@ export default function Skills({ skills }) {
                 className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/10 text-2xl leading-none text-white transition hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-brand"
                 type="button"
                 aria-label="Close skills story"
-                onClick={() => setActiveSkill(null)}
+                onClick={closeSkillStory}
               >
                 ×
               </button>

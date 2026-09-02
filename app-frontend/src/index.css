@@ -20,6 +20,31 @@ body {
   background: #05060d;
 }
 
+::selection {
+  background: color-mix(in srgb, var(--color-cyan-brand) 35%, transparent);
+  color: var(--color-ice);
+}
+
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  transform: translateY(-200%);
+  border-radius: 0.5rem;
+  background: var(--color-cyan-brand);
+  color: var(--color-ink);
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+  outline: 2px solid var(--color-ice);
+  outline-offset: 2px;
+}
+
 .story-pulse {
   isolation: isolate;
   box-shadow: 0 0 0 1px rgba(243, 253, 255, 0.2), 0 0 18px rgba(69, 178, 202, 0.2);
@@ -39,4 +64,19 @@ body {
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

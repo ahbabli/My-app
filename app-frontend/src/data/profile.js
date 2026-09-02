@@ -36,6 +36,19 @@ export const fallbackProjects = [
     is_favorite: true,
     tags: ['Figma', 'Mobile App', 'Design System'],
     links: [{ label: 'See Details', url: 'https://www.behance.net/gallery/243682853/FitTrack-app-Ui-Ux-design' }],
+  },{
+    title: 'Playlist Pulse',
+    slug: 'Chrome Extension',
+    category: 'Development',
+    excerpt: 'Playlist Pulse is a Chrome extension that analyzes YouTube playlists and gives you a clear breakdown of the total runtime, video count, average duration, playback-speed estimates, and time saved.',
+    year: 2026,
+    status: 'Published',
+    image_url: asset2('8.jpg'),
+    is_featured: true,
+    is_hidden: false,
+    is_favorite: true,
+    tags: ['javaScript', 'extension'],
+   links: [{ label: 'See Details', url: 'https://ahbabli.gumroad.com/l/playlist-pulse' }],
   },
   {
     title: 'Taleeb Platform',
@@ -51,6 +64,7 @@ export const fallbackProjects = [
     tags: ['React js', 'Laravel', 'Dev'],
    links: [{ label: 'See Details', url: 'https://www.behance.net/gallery/252710195/TALEEB-smart-student-platform' }],
   },
+  
   {
     title: 'Honoviren Chocolate Landing Page',
     slug: 'landing-page',

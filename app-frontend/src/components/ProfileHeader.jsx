@@ -1,42 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { asset } from '../utils/assets.js';
+import { useDialogFocus } from '../utils/useDialogFocus.js';
 
 export default function ProfileHeader({ profile }) {
   const [isStoryOpen, setIsStoryOpen] = useState(false);
   const photoSrc = profile.photoUrl || asset('avatar.png');
   const storyPhotoSrc = asset('story.jpeg');
 
-  useEffect(() => {
-    if (!isStoryOpen) {
-      return undefined;
-    }
-
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') {
-        setIsStoryOpen(false);
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
-    };
-  }, [isStoryOpen]);
+  const closeStory = useCallback(() => setIsStoryOpen(false), []);
+  const storyDialogRef = useDialogFocus(isStoryOpen, closeStory);
 
   return (
-    <header className="grid grid-cols-[108px_1fr] items-center gap-5 sm:block lg:flex lg:flex-col lg:justify-center">
+    <header className="grid grid-cols-[92px_minmax(0,1fr)] items-center gap-3 min-[400px]:grid-cols-[108px_minmax(0,1fr)] min-[400px]:gap-5 sm:block lg:flex lg:flex-col lg:justify-center">
       <button
-        className="story-pulse relative h-[104px] w-[104px] rounded-full transition hover:scale-[1.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-brand focus-visible:ring-offset-4 focus-visible:ring-offset-ink sm:h-[166px] sm:w-[166px] lg:h-[220px] lg:w-[220px]"
+        className="story-pulse relative h-[90px] w-[90px] rounded-full transition hover:scale-[1.02] active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-brand focus-visible:ring-offset-4 focus-visible:ring-offset-ink min-[400px]:h-[104px] min-[400px]:w-[104px] sm:h-[166px] sm:w-[166px] lg:h-[220px] lg:w-[220px]"
         type="button"
         aria-label={`Open ${profile.name} profile story`}
         onClick={() => setIsStoryOpen(true)}
       >
         <img className="absolute inset-0 h-full w-full" src={asset('avatar-ring.svg')} alt="" />
         <img
-          className="absolute left-[3px] top-0.5 h-[101px] w-[101px] rounded-full object-cover sm:left-1 sm:top-[3px] sm:h-[162px] sm:w-[162px] lg:h-[214px] lg:w-[214px]"
+          className="absolute left-[3px] top-0.5 h-[87px] w-[87px] rounded-full object-cover min-[400px]:h-[101px] min-[400px]:w-[101px] sm:left-1 sm:top-[3px] sm:h-[162px] sm:w-[162px] lg:h-[214px] lg:w-[214px]"
           src={photoSrc}
           alt={`${profile.name} profile`}
         />
@@ -44,21 +28,21 @@ export default function ProfileHeader({ profile }) {
 
       <div className="min-w-0 sm:mt-[39px] lg:mt-10">
         <a className="inline-block transition hover:text-cyan-brand" href={profile.socialHref ?? '#projects'}>
-          <h1 className="text-[27px] font-bold leading-[1.02] tracking-normal text-white sm:text-[31px] lg:text-[42px]">{profile.name}</h1>
+          <h1 className="text-[23px] font-bold leading-[1.02] tracking-normal text-white min-[400px]:text-[27px] sm:text-[31px] lg:text-[42px]">{profile.name}</h1>
         </a>
-        <a className="mt-0.5 block text-[18px] leading-[1.16] text-mist transition hover:text-white sm:-mt-0.5 sm:text-[21px] lg:text-[24px]" href={profile.socialHref ?? '#projects'}>
+        <a className="mt-0.5 block text-[16px] leading-[1.16] text-mist transition hover:text-white min-[400px]:text-[18px] sm:-mt-0.5 sm:text-[21px] lg:text-[24px]" href={profile.socialHref ?? '#projects'}>
           {profile.handle}
         </a>
 
         <div className="mt-4 grid grid-cols-2 gap-2 sm:mt-[34px] sm:flex sm:items-center sm:gap-3 lg:mt-9">
           <a
-            className="inline-flex min-h-10 items-center justify-center whitespace-nowrap rounded-[9px] bg-mist px-3 text-[15px] font-bold leading-none text-ink transition hover:bg-white sm:min-h-[43px] sm:w-[104px] sm:px-3.5 sm:py-2.5 sm:text-[20px]"
+            className="inline-flex min-h-10 items-center justify-center whitespace-nowrap rounded-[9px] bg-mist px-3 text-[15px] font-bold leading-none text-ink transition hover:bg-white active:translate-y-px focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-brand focus-visible:ring-offset-2 focus-visible:ring-offset-ink sm:min-h-[43px] sm:w-[104px] sm:px-3.5 sm:py-2.5 sm:text-[20px]"
             href="/contact"
           >
             Contact
           </a>
           <a
-            className="inline-flex min-h-10 items-center justify-center whitespace-nowrap rounded-[9px] bg-cyan-brand px-3 text-[15px] font-bold leading-none text-white transition hover:bg-[#62c9df] sm:min-h-[43px] sm:w-[157px] sm:px-3.5 sm:py-2.5 sm:text-[20px]"
+            className="inline-flex min-h-10 items-center justify-center whitespace-nowrap rounded-[9px] bg-cyan-brand px-3 text-[15px] font-bold leading-none text-white transition hover:brightness-110 active:translate-y-px focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-brand focus-visible:ring-offset-2 focus-visible:ring-offset-ink sm:min-h-[43px] sm:w-[157px] sm:px-3.5 sm:py-2.5 sm:text-[20px]"
             href={profile.cvHref}
           >
             <span className="sm:hidden">CV</span>
@@ -73,9 +57,11 @@ export default function ProfileHeader({ profile }) {
           role="dialog"
           aria-modal="true"
           aria-labelledby="profile-story-title"
-          onMouseDown={() => setIsStoryOpen(false)}
+          onMouseDown={closeStory}
         >
           <div
+            ref={storyDialogRef}
+            tabIndex="-1"
             className="relative flex h-[min(680px,calc(100dvh-24px))] w-full max-w-[390px] flex-col overflow-hidden rounded-[24px] border border-white/15 bg-[#080a12] shadow-2xl shadow-black/60 sm:h-[min(720px,92vh)] sm:rounded-[28px]"
             onMouseDown={(event) => event.stopPropagation()}
           >
@@ -99,7 +85,7 @@ export default function ProfileHeader({ profile }) {
                 className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-black/28 text-2xl leading-none text-white transition hover:bg-black/45 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-brand"
                 type="button"
                 aria-label="Close profile story"
-                onClick={() => setIsStoryOpen(false)}
+                onClick={closeStory}
               >
                 ×
               </button>

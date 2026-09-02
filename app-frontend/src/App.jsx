@@ -29,7 +29,7 @@ export default function App() {
   }
 
   return (
-    <main className="min-h-screen overflow-hidden bg-ink text-white antialiased">
+    <main id="main-content" className="min-h-screen overflow-hidden bg-ink text-white antialiased">
       <section className="mx-auto flex w-full max-w-[1180px] items-center justify-center px-0 py-0 sm:px-6 sm:py-8 lg:min-h-screen lg:px-10">
         <ProfileSurface profile={profile} />
       </section>

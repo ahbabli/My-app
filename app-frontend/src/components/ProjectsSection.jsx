@@ -33,7 +33,7 @@ export default function ProjectsSection({ projects }) {
 
             return (
               <button
-                className={`flex h-full items-center border-t-2 px-2 transition ${
+                className={`flex h-full items-center border-t-2 px-2 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-brand ${
                   isActive ? 'border-white text-white' : 'border-transparent text-white/35 hover:text-white'
                 }`}
                 type="button"
@@ -60,8 +60,14 @@ export default function ProjectsSection({ projects }) {
         </div>
 
         {visibleProjects.length === 0 ? (
-          <div className="grid min-h-[180px] place-items-center text-center text-sm text-mist">
-            No projects here yet.
+          <div className="grid min-h-[220px] place-items-center px-5 text-center">
+            <div>
+              <p className="text-sm font-bold text-ice">Favorites are being curated.</p>
+              <p className="mt-2 text-sm text-mist">Explore the full project grid in the meantime.</p>
+              <button className="mt-5 min-h-10 rounded-[9px] bg-cyan-brand px-4 text-sm font-bold text-white transition hover:bg-mist hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-brand focus-visible:ring-offset-4 focus-visible:ring-offset-ink" type="button" onClick={() => setActiveTab('projects')}>
+                View all projects
+              </button>
+            </div>
           </div>
         ) : null}
       </div>
